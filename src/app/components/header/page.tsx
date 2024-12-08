@@ -19,7 +19,7 @@ export default function Navbar() {
       {/* Top Black Banner */}
       <div className="bg-black text-white text-sm text-center py-2">
         Enjoy up to 50% off on your first order.{" "}
-        <a href="#" className="underline">
+        <a href="/allproducts" className="underline">
           Shop Now
         </a>
       </div>
@@ -28,7 +28,7 @@ export default function Navbar() {
       <nav className="flex justify-between items-center bg-white px-4 md:px-6 py-4 shadow-md">
         {/* Hamburger Button (Left Side) */}
         <AiOutlineMenu
-          className="text-xl text-gray-600 hover:text-black cursor-pointer md:hidden"
+          className="text-xl text-gray-600 hover:text-black cursor-pointer font-bold md:hidden"
           onClick={toggleSidebar}
         />
 

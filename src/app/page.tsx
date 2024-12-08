@@ -1,7 +1,7 @@
 import Brands from "./brands/page";
 import Hero from "./heroSec/page";
 import Arrival from "./newarrival/page";
-import NewsLetter from "./newsletter/page";
+
 
 import TestimonialsCarousel from "./reviews/page";
 import Style from "./style/page";
@@ -18,7 +18,7 @@ export default function Home() {
   
       <Style/>
       <TestimonialsCarousel/>
-      <NewsLetter/>
+      
 
     </div>
   )

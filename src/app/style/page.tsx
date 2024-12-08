@@ -16,7 +16,7 @@ export default function Style() {
           {/* Image 1 */}
           <div className="relative w-[300px] h-[200px] md:w-[407px] md:h-[289px]">
             <Image
-              src="/capture.png"
+              src="/Capture.PNG"
               alt="Casual"
               fill
               className="rounded-lg object-cover"
@@ -29,7 +29,7 @@ export default function Style() {
           {/* Image 2 */}
           <div className="relative w-[300px] h-[200px] md:w-[407px] md:h-[289px]">
             <Image
-              src="/formal.png"
+              src="/formal.PNG"
               alt="Formal"
               fill
               className="rounded-lg object-cover"

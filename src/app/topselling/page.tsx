@@ -17,14 +17,14 @@ export default function TopSelling () {
     {
       id: 1,
       name: "T-shirt with Tape Details",
-      image: "/shirt1.png",
+      image: "/shirt1.PNG",
       rating: 4.5,
       price: 120,
     },
     {
       id: 2,
       name: "Skinny Fit Jeans",
-      image: "/shirt2.png",
+      image: "/shirt2.PNG",
       rating: 3.5,
       price: 240,
       originalPrice: 260,
@@ -32,14 +32,14 @@ export default function TopSelling () {
     {
       id: 3,
       name: "Checkered Shirt",
-      image: "/shirt3.png",
+      image: "/shirt3.PNG",
       rating: 4.5,
       price: 180,
     },
     {
       id: 4,
       name: "Sleeve Striped T-shirt",
-      image: "/shirt4.png",
+      image: "/shirt4.PNG",
       rating: 4.5,
       price: 130,
       originalPrice: 160,
