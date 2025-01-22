@@ -1,17 +1,72 @@
 
-
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import { ShoppingCartIcon, User } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
+
+// Type definition for the product
+type Product = {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  discountPercentage: number;
+  priceWithoutDiscount: number;
+  rating: number;
+  ratingCount: number;
+  tags: string[];
+  sizes: string[];
+  image: string; // Image URL
+};
 
 export default function Navbar() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [query, setQuery] = useState(""); // State for search query
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]); // State for filtered products
+  const [allProducts, setAllProducts] = useState<Product[]>([]); // State for all products
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  useEffect(() => {
+    // Fetch all product data on component mount
+    const fetchProducts = async () => {
+      const query = `*[_type == "products"] {
+        _id,
+        name,
+        description,
+        price,
+        discountPercentage,
+        priceWithoutDiscount,
+        rating,
+        ratingCount,
+        tags,
+        sizes,
+        "image": image.asset->url
+      }`;
+      const response = await fetch("/api/your-endpoint", {
+        method: "POST",
+        body: JSON.stringify({ query }),
+      });
+      const data = await response.json();
+      setAllProducts(data); // Store all products
+      setFilteredProducts(data); // Initially, show all products
+    };
+
+    fetchProducts();
+  }, []);
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(e.target.value);
+    // Filter products based on search query
+    const filtered = allProducts.filter((product) =>
+      product.name.toLowerCase().includes(e.target.value.toLowerCase())
+    );
+    setFilteredProducts(filtered); // Update filtered products
   };
 
   return (
@@ -46,18 +101,18 @@ export default function Navbar() {
             On Sale
           </Link>
           <Link href="/allproducts" className="text-gray-600 hover:text-black">
-            New Arrivals
+          Products
           </Link>
-          <Link href="/details" className="text-gray-600 hover:text-black">
-            Product Detail
-          </Link>
+         
         </div>
 
-        {/* Search Bar */}
+      
         <div className="hidden md:flex items-center w-1/3">
           <input
             type="text"
             placeholder="Search for products..."
+            value={query} 
+            onChange={handleSearch} 
             className="w-full px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-gray-300"
           />
         </div>
@@ -93,14 +148,34 @@ export default function Navbar() {
               On Sale
             </Link>
             <Link href="/allproducts" className="text-gray-600 hover:text-black">
-              New Arrivals
+              Products
             </Link>
-            <Link href="/details" className="text-gray-600 hover:text-black">
-              Product Detail
-            </Link>
+        
           </div>
         </div>
       )}
+
+    
+      <div className="mt-6 px-4">
+        {filteredProducts.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {filteredProducts.map((product) => (
+              <div key={product.id} className="border p-4 rounded-lg">
+                <Image
+                  src={product.image}
+                  alt={product.name}
+                  className="w-full h-48 object-cover"
+                />
+                <h3 className="text-lg font-semibold mt-2">{product.name}</h3>
+                <p>{product.description}</p>
+                <p className="font-bold text-lg mt-2">${product.price}</p>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p>No products found for {query}</p>
+        )}
+      </div>
     </div>
   );
 }

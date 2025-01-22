@@ -2,7 +2,11 @@
 
 "use client"
 
-import { Star, BadgeCheck } from 'lucide-react'
+import { Swiper, SwiperSlide } from "swiper/react"
+import { Navigation } from "swiper/modules"
+import "swiper/css"
+import "swiper/css/navigation"
+import { Star, BadgeCheck } from "lucide-react"
 
 interface Testimonial {
   id: number
@@ -57,25 +61,22 @@ export default function TestimonialsCarousel() {
           OUR HAPPY CUSTOMERS
         </h2>
 
-        <div className="w-full relative">
-          {/* Carousel Navigation */}
-          <div className="flex justify-between items-center mb-6">
-            <button className="p-2 bg-gray-100 rounded-full hover:bg-gray-200">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path>
-              </svg>
-            </button>
-            <button className="p-2 bg-gray-100 rounded-full hover:bg-gray-200">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
-              </svg>
-            </button>
-          </div>
-
-          {/* Testimonials */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {testimonials.map((testimonial) => (
-              <div key={testimonial.id} className="bg-white shadow-md p-6 rounded-lg">
+        <Swiper
+          modules={[Navigation]}
+          navigation
+          spaceBetween={20}
+          slidesPerView={1}
+          breakpoints={{
+            640: { slidesPerView: 1 },
+            768: { slidesPerView: 2 },
+            1024: { slidesPerView: 3 },
+            1280: { slidesPerView: 4 },
+          }}
+          className="w-full"
+        >
+          {testimonials.map((testimonial) => (
+            <SwiperSlide key={testimonial.id}>
+              <div className="bg-white shadow-md p-6 rounded-lg">
                 <div className="space-y-4">
                   <div className="flex flex-col gap-2">
                     <div className="flex">{renderStars(testimonial.rating)}</div>
@@ -89,9 +90,9 @@ export default function TestimonialsCarousel() {
                   </p>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </div>
     </section>
   )

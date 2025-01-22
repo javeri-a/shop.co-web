@@ -1,7 +1,5 @@
 
 
-
-
 "use client"
 
 import Image from "next/image"
@@ -20,12 +18,12 @@ interface Product {
   priceWithoutDiscount?: number
 }
 
-export default function TopSelling() {
+export default function Like() {
   const [products, setProducts] = useState<Product[]>([])
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const query = `*[_type == "products"][6...10] {
+      const query = `*[_type == "products"][11...15] {
         _id,
         name,
         "image": image.asset._ref,
@@ -80,7 +78,7 @@ export default function TopSelling() {
     <section className="w-full py-12 bg-white">
       <div className="container mx-auto px-4">
         <h1 className="text-3xl md:text-4xl font-bold text-center mb-8">
-          NEW ARRIVAL
+          YOU MIGHT ALSO LIKE
         </h1>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -129,13 +127,7 @@ export default function TopSelling() {
           ))}
         </div>
 
-        <div className="mt-8 text-center">
-          <button className="text-gray-600 hover:text-gray-900 text-sm font-medium border px-6 py-3 rounded-full">
-            <Link href="/allproducts">
-              View All
-            </Link>
-          </button>
-        </div>
+       
       </div>
     </section>
   )

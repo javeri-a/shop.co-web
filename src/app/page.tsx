@@ -4,6 +4,7 @@ import Arrival from "./newarrival/page";
 
 
 import TestimonialsCarousel from "./reviews/page";
+
 import Style from "./style/page";
 import TopSelling from "./topselling/page";
 
@@ -15,7 +16,7 @@ export default function Home() {
       <Brands/>
       <Arrival/>
       <TopSelling/>
-  
+
       <Style/>
       <TestimonialsCarousel/>
       

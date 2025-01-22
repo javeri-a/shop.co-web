@@ -1,50 +1,42 @@
 
+
+"use client"
+
 import Image from "next/image"
-import { Star, StarHalf } from 'lucide-react'
 import Link from "next/link"
+import { useEffect, useState } from "react"
+import { Star, StarHalf } from "lucide-react"
+import { client } from "@/sanity/lib/client"
+import { urlFor } from "@/sanity/lib/image"
 
 interface Product {
-  id: number
+  _id: string
   name: string
   image: string
   rating: number
   price: number
-  originalPrice?: number
+  priceWithoutDiscount?: number
 }
 
-export default function TopSelling () {
-  const products: Product[] = [
-    {
-      id: 1,
-      name: "T-shirt with Tape Details",
-      image: "/shirt1.PNG",
-      rating: 4.5,
-      price: 120,
-    },
-    {
-      id: 2,
-      name: "Skinny Fit Jeans",
-      image: "/shirt2.PNG",
-      rating: 3.5,
-      price: 240,
-      originalPrice: 260,
-    },
-    {
-      id: 3,
-      name: "Checkered Shirt",
-      image: "/shirt3.PNG",
-      rating: 4.5,
-      price: 180,
-    },
-    {
-      id: 4,
-      name: "Sleeve Striped T-shirt",
-      image: "/shirt4.PNG",
-      rating: 4.5,
-      price: 130,
-      originalPrice: 160,
-    },
-  ]
+export default function TopSelling() {
+  const [products, setProducts] = useState<Product[]>([])
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const query = `*[_type == "products"][0...4] {
+        _id,
+        name,
+        "image": image.asset._ref,
+        price,
+        priceWithoutDiscount,
+        rating
+      }`
+      const fetchedProducts = await client.fetch(query)
+      setProducts(fetchedProducts)
+    }
+
+    fetchProducts()
+  }, [])
 
   const renderStars = (rating: number) => {
     const stars = []
@@ -91,55 +83,54 @@ export default function TopSelling () {
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {products.map((product) => (
-            <div 
-              key={product.id} 
-              className="group cursor-pointer"
-            >
-              <div className="relative aspect-square mb-4 rounded-2xl bg-[#F5F5F5] overflow-hidden">
-                <Image
-                  src={product.image}
-                  alt={product.name}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <h3 className="text-base font-medium text-gray-900">
-                  {product.name}
-                </h3>
-                
-                <div className="flex items-center gap-1">
-                  {renderStars(product.rating)}
-                  <span className="text-sm text-gray-500 ml-1">
-                    {product.rating}/5
-                  </span>
+            <Link key={product._id} href={`/dynamicProducts/${product._id}`}>
+              <div className="group cursor-pointer">
+                <div className="relative aspect-square mb-4 rounded-2xl bg-[#F5F5F5] overflow-hidden">
+                  <Image
+                    src={urlFor(product.image).width(300).url()}
+                    alt={product.name}
+                    width={300}
+                    height={300}
+                  />
                 </div>
                 
-                <div className="flex items-center gap-2">
-                  <span className="text-lg font-semibold">
-                    ${product.price}
-                  </span>
-                  {product.originalPrice && (
-                    <>
-                      <span className="text-gray-500 line-through">
-                        ${product.originalPrice}
-                      </span>
-                      <span className="text-red-500 text-sm">
-                        -{Math.round((1 - product.price/product.originalPrice) * 100)}%
-                      </span>
-                    </>
-                  )}
+                <div className="space-y-2">
+                  <h3 className="text-base font-medium text-gray-900">
+                    {product.name}
+                  </h3>
+                  
+                  <div className="flex items-center gap-1">
+                    {renderStars(product.rating)}
+                    <span className="text-sm text-gray-500 ml-1">
+                      {product.rating}/5
+                    </span>
+                  </div>
+                  
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg font-semibold">
+                      ${product.price}
+                    </span>
+                    {product.priceWithoutDiscount && (
+                      <>
+                        <span className="text-gray-500 line-through">
+                          ${product.priceWithoutDiscount}
+                        </span>
+                        <span className="text-red-500 text-sm">
+                          -{Math.round((1 - product.price / product.priceWithoutDiscount) * 100)}%
+                        </span>
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
 
         <div className="mt-8 text-center">
           <button className="text-gray-600 hover:text-gray-900 text-sm font-medium border px-6 py-3 rounded-full">
-          <Link href = "/allproducts">
-            View All
+            <Link href="/allproducts">
+              View All
             </Link>
           </button>
         </div>
@@ -147,4 +138,3 @@ export default function TopSelling () {
     </section>
   )
 }
-
