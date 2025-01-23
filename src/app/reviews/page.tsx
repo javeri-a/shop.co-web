@@ -1,18 +1,17 @@
 
 
-"use client"
+"use client";
 
-import { Swiper, SwiperSlide } from "swiper/react"
-import { Navigation } from "swiper/modules"
-import "swiper/css"
-import "swiper/css/navigation"
-import { Star, BadgeCheck } from "lucide-react"
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay } from "swiper/modules";
+import "swiper/css";
+import { Star, BadgeCheck } from "lucide-react";
 
 interface Testimonial {
-  id: number
-  name: string
-  review: string
-  rating: number
+  id: number;
+  name: string;
+  review: string;
+  rating: number;
 }
 
 export default function TestimonialsCarousel() {
@@ -36,23 +35,21 @@ export default function TestimonialsCarousel() {
       rating: 5,
     },
     {
-      id: 4,
+      id: 6,
       name: "Michael R",
       review: "Outstanding service and quality products! The attention to detail in both the clothes and customer service is impressive. Highly recommend to anyone looking for quality fashion.",
       rating: 5,
     },
-  ]
+  ];
+ 
 
   const renderStars = (rating: number) => {
     return Array(rating)
       .fill(null)
       .map((_, index) => (
-        <Star
-          key={index}
-          className="w-4 h-4 fill-yellow-400 text-yellow-400"
-        />
-      ))
-  }
+        <Star key={index} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+      ));
+  };
 
   return (
     <section className="w-full py-12 bg-gray-50">
@@ -62,8 +59,11 @@ export default function TestimonialsCarousel() {
         </h2>
 
         <Swiper
-          modules={[Navigation]}
-          navigation
+          modules={[Autoplay]}
+          autoplay={{
+            delay: 3000, 
+            disableOnInteraction: false, 
+          }}
           spaceBetween={20}
           slidesPerView={1}
           breakpoints={{
@@ -95,5 +95,5 @@ export default function TestimonialsCarousel() {
         </Swiper>
       </div>
     </section>
-  )
+  );
 }

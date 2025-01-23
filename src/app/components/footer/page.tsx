@@ -1,3 +1,4 @@
+
 import Image from "next/image";
 
 
@@ -60,6 +61,7 @@ export default function Footer() {
             <p className="text-sm text-gray-800 mb-4 sm:mb-0">
               Shop.co © 2000-2023, All Rights Reserved
             </p>
+            
             <div className="flex gap-0">
               <Image src="/f1.png"
                alt="Visa"

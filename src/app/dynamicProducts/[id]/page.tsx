@@ -1,12 +1,9 @@
 
 
-
 "use client";
-import Like from "@/app/alsoLike/page";
-import TestimonialsCarousel from "@/app/reviews/page";
 import { client } from "@/sanity/lib/client";
 import Image from "next/image";
-import Link from "next/link";
+
 import { useState, useEffect } from "react";
 
 interface Product {
@@ -20,10 +17,20 @@ interface Product {
   description?: string;
 }
 
+interface CartItem {
+  _id: string;
+  name: string;
+  price: number;
+  image: string;
+  quantity: number;
+  size: string;
+  color: string;
+}
+
 export default function ProductPage({ params }: { params: { id: string } }) {
   const [product, setProduct] = useState<Product | null>(null);
   const [selectedColor, setSelectedColor] = useState("olive");
-  const [selectedSize, setSelectedSize] = useState("m");
+  const [selectedSize, setSelectedSize] = useState("medium");
 
   useEffect(() => {
     async function fetchProduct() {
@@ -46,12 +53,32 @@ export default function ProductPage({ params }: { params: { id: string } }) {
         console.error("Error fetching product:", error);
       }
     }
-
     fetchProduct();
   }, [params.id]);
 
   const handleAddToCart = () => {
     if (product) {
+      const cartItem: CartItem = {
+        _id: product._id,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        quantity: 1,
+        size: selectedSize,
+        color: selectedColor,
+      };
+
+      const storedCart = localStorage.getItem("cart");
+      const cart: CartItem[] = storedCart ? JSON.parse(storedCart) : [];
+
+      const existingItemIndex = cart.findIndex((item) => item._id === cartItem._id);
+      if (existingItemIndex !== -1) {
+        cart[existingItemIndex].quantity += 1;
+      } else {
+        cart.push(cartItem);
+      }
+
+      localStorage.setItem("cart", JSON.stringify(cart));
       alert(`${product.name} has been added to your cart!`);
     }
   };
@@ -94,90 +121,55 @@ export default function ProductPage({ params }: { params: { id: string } }) {
             <div className="space-y-2">
               <h1>Select Colors</h1>
               <div className="flex gap-2">
-                <input
-                  type="radio"
-                  id="olive"
-                  name="color"
-                  value="olive"
-                  checked={selectedColor === "olive"}
-                  onChange={() => setSelectedColor("olive")}
-                  className="peer sr-only"
-                />
-                <label
-                  htmlFor="olive"
-                  className={`w-8 h-8 rounded-full ${selectedColor === "olive" ? "ring-2 ring-black" : ""}`}
-                  style={{ backgroundColor: "#808000" }}
-                ></label>
-
-                <input
-                  type="radio"
-                  id="black"
-                  name="color"
-                  value="black"
-                  checked={selectedColor === "black"}
-                  onChange={() => setSelectedColor("black")}
-                  className="peer sr-only"
-                />
-                <label
-                  htmlFor="black"
-                  className={`w-8 h-8 rounded-full ${selectedColor === "black" ? "ring-2 ring-black" : ""}`}
-                  style={{ backgroundColor: "#000000" }}
-                ></label>
-
-                <input
-                  type="radio"
-                  id="gray"
-                  name="color"
-                  value="gray"
-                  checked={selectedColor === "gray"}
-                  onChange={() => setSelectedColor("gray")}
-                  className="peer sr-only"
-                />
-                <label
-                  htmlFor="gray"
-                  className={`w-8 h-8 rounded-full ${selectedColor === "gray" ? "ring-2 ring-black" : ""}`}
-                  style={{ backgroundColor: "#808080" }}
-                ></label>
+                {["olive", "black", "gray"].map((color) => (
+                  <label key={color}>
+                    <input
+                      type="radio"
+                      name="color"
+                      value={color}
+                      checked={selectedColor === color}
+                      onChange={() => setSelectedColor(color)}
+                      className="peer sr-only"
+                    />
+                    <span
+                      className={`w-8 h-8 rounded-full cursor-pointer ${
+                        selectedColor === color ? "ring-2 ring-black" : ""
+                      }`}
+                      style={{ backgroundColor: color }}
+                    ></span>
+                  </label>
+                ))}
               </div>
             </div>
             <div className="space-y-2">
               <p className="font-medium">Choose Size</p>
               <div className="grid grid-cols-5 gap-2">
                 {["X-small", "small", "medium", "large", "X-large"].map((size) => (
-                  <div key={size} className="flex items-center">
+                  <label key={size} className="cursor-pointer">
                     <input
                       type="radio"
-                      id={size}
                       name="size"
                       value={size}
                       checked={selectedSize === size}
                       onChange={() => setSelectedSize(size)}
                       className="peer sr-only"
                     />
-                    <label
-                      htmlFor={size}
-                      className="flex h-10 w-full cursor-pointer items-center justify-center border rounded-full bg-slate-100 border-gray-200 text-sm font-medium peer-checked:border-black peer-checked:bg-black peer-checked:text-white"
-                    >
+                    <span className="flex h-10 w-full items-center justify-center border rounded-full bg-slate-100 text-sm font-medium peer-checked:bg-black peer-checked:text-white">
                       {size.toUpperCase()}
-                    </label>
-                  </div>
+                    </span>
+                  </label>
                 ))}
               </div>
             </div>
             <button
               onClick={handleAddToCart}
-              className="flex h-10 w-full text-white cursor-pointer items-center justify-center border rounded-full bg-black border-gray-200 text-sm font-medium"
+              className="flex h-10 w-full items-center justify-center border rounded-full bg-black text-white text-sm font-medium"
             >
-              <Link href="/cart">
-                Add to Cart
-              </Link>
+              Add to Cart
             </button>
           </div>
         </div>
       </div>
-
-      <TestimonialsCarousel />
-      <Like />
     </section>
   );
 }
