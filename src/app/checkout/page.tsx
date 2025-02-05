@@ -1,6 +1,5 @@
 
 
-
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -12,17 +11,11 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY 
 
 export default function CheckoutPage() {
   const [clientSecret, setClientSecret] = useState<string | null>(null);
-  const [cartTotal, setCartTotal] = useState<any>(null);
 
   useEffect(() => {
     createPaymentIntent().then((res) => {
       setClientSecret(res.clientSecret);
     });
-
-    const storedTotal = localStorage.getItem("cartTotal");
-    if (storedTotal) {
-      setCartTotal(JSON.parse(storedTotal));
-    }
   }, []);
 
   if (!clientSecret) {
@@ -32,6 +25,7 @@ export default function CheckoutPage() {
   return (
     <div className="max-w-md mx-auto p-6 bg-white shadow-lg rounded-lg mt-10 border border-gray-200">
       <h1 className="text-2xl font-bold text-center mb-6">Checkout</h1>
+
       <Elements stripe={stripePromise} options={{ clientSecret }}>
         <PaymentForm />
       </Elements>

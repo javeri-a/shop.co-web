@@ -6,7 +6,8 @@ import { useState, useEffect } from "react";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import { ShoppingCartIcon, User2Icon } from "lucide-react";
 import Link from "next/link";
-import { SignInButton } from "@clerk/nextjs";
+
+import { ClerkProvider, SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
 
 type Product = {
@@ -114,13 +115,26 @@ export default function Navbar() {
             </button>
           </Link>
         
-            <SignInButton mode="modal">
-              <button className="flex items-center text-gray-600 hover:text-black">
-                <User2Icon className="text-lg" />
-              
-              </button>
-            </SignInButton>
-       
+          
+       <ClerkProvider>
+  <div className="auth-section">
+    <SignedIn>
+      <UserButton>
+        <button className="flex items-center text-gray-600 hover:text-black p-2 rounded-lg transition-all duration-300">
+          <User2Icon className="text-lg" />
+        </button>
+      </UserButton>
+    </SignedIn>
+    <SignedOut>
+      <SignInButton>
+        <button className="flex items-center text-gray-600 hover:text-black p-2 rounded-lg transition-all duration-300">
+          <User2Icon className="text-lg" />
+        </button>
+      </SignInButton>
+    </SignedOut>
+  </div>
+</ClerkProvider>
+
         </div>
       </nav>
 
