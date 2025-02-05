@@ -84,14 +84,14 @@ export default function RootLayout({
         >
           <header>
             <Header />
-            <div className="auth-section">
+            {/* <div className="auth-section">
               <SignedOut>
                 <SignInButton />
               </SignedOut>
               <SignedIn>
                 <UserButton />
               </SignedIn>
-            </div>
+            </div> */}
           </header>
           <main>
             {children}

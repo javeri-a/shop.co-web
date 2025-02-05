@@ -1,12 +1,11 @@
 
 
-"use client";
-
+ "use client";
 import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Trash2 } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link"; // Using Link from next/link
 
 interface CartItem {
   _id: string;
@@ -153,15 +152,17 @@ export default function CartPage() {
             >
               Apply
             </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="w-full bg-black text-white py-2 rounded hover:bg-gray-800"
-            > 
-   
-              Go to Checkout
-              
-            </motion.button>
+
+         
+            <Link href="/checkout">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="w-full bg-black text-white py-2 rounded hover:bg-gray-900"
+              >
+                Go to Checkout
+              </motion.button>
+            </Link>
           </div>
         </motion.div>
       </div>
